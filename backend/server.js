@@ -5,7 +5,6 @@ const { initDb } = require('./database');
 const todosRouter = require('./routes/todos');
 
 const app = express();
-const PORT = process.env.PORT || 8080;
 
 // CORS: allow Railway frontend URL + localhost for dev
 const allowedOrigins = [
@@ -33,9 +32,15 @@ app.use('/api/todos', todosRouter);
 // Start server after DB is ready
 initDb()
   .then(() => {
-    app.listen(PORT, '0.0.0.0', () => {
-  console.log(`Server running on port ${PORT}`);
+    const host = '0.0.0.0';
+const port = process.env.PORT || 8080;
+
+app.listen(port, host, () => {
+  console.log(`✅ Server running on ${host}:${port}`);
+  console.log(`✅ Environment: ${process.env.NODE_ENV || 'development'}`);
+  console.log(`✅ Frontend URL: ${process.env.FRONTEND_URL || 'not set'}`);
 });
+
 
   })
   .catch((err) => {
