@@ -5,7 +5,7 @@ const { initDb } = require('./database');
 const todosRouter = require('./routes/todos');
 
 const app = express();
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 8080;
 
 // CORS: allow Railway frontend URL + localhost for dev
 const allowedOrigins = [
