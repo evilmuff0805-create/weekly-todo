@@ -13,6 +13,19 @@
   --danger: #ef4444;
 }
 
+[data-theme="dark"] {
+  --primary: #818cf8;
+  --primary-light: #1e1b4b;
+  --today-bg: #052e16;
+  --today-border: #16a34a;
+  --text: #f1f5f9;
+  --text-muted: #94a3b8;
+  --border: #334155;
+  --bg: #0f172a;
+  --card-bg: #1e293b;
+  --danger: #f87171;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   background: var(--bg);
@@ -23,12 +36,35 @@ body {
 /* App Layout */
 .app { max-width: 1200px; margin: 0 auto; padding: 1.5rem 1rem; }
 
+.app-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+}
+
 .app-header h1 {
   font-size: 1.5rem;
   font-weight: 700;
   color: var(--primary);
-  margin-bottom: 1rem;
 }
+
+/* Dark mode toggle */
+.dark-toggle {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  width: 38px;
+  height: 38px;
+  font-size: 1.2rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-muted);
+  transition: background 0.15s, color 0.15s;
+}
+.dark-toggle:hover { background: var(--primary-light); color: var(--primary); }
 
 /* Week Navigation */
 .week-navigation {
@@ -158,6 +194,37 @@ body {
   flex-shrink: 0;
 }
 
+/* Priority badge */
+.priority-badge {
+  font-size: 0.65rem;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+.priority-badge.high   { background: #fee2e2; color: #dc2626; }
+.priority-badge.medium { background: #fef9c3; color: #ca8a04; }
+.priority-badge.low    { background: #dbeafe; color: #2563eb; }
+
+[data-theme="dark"] .priority-badge.high   { background: #450a0a; color: #fca5a5; }
+[data-theme="dark"] .priority-badge.medium { background: #422006; color: #fde68a; }
+[data-theme="dark"] .priority-badge.low    { background: #172554; color: #93c5fd; }
+
+/* Priority select in form */
+.priority-select {
+  width: 100%;
+  border: 1px solid var(--border);
+  border-radius: 5px;
+  padding: 0.35rem 0.5rem;
+  font-size: 0.8rem;
+  outline: none;
+  background: var(--card-bg);
+  color: var(--text);
+  cursor: pointer;
+}
+.priority-select:focus { border-color: var(--primary); }
+
 /* Add Todo */
 .add-todo-btn {
   width: 100%;
@@ -186,6 +253,8 @@ body {
   padding: 0.35rem 0.5rem;
   font-size: 0.8rem;
   outline: none;
+  background: var(--card-bg);
+  color: var(--text);
 }
 .add-todo-form input:focus { border-color: var(--primary); }
 
@@ -293,3 +362,16 @@ body {
   cursor: pointer;
 }
 .modal-confirm-btn:hover { background: #4338ca; }
+
+/* Mobile optimizations — placed last to win specificity battles */
+@media (max-width: 480px) {
+  .week-view { grid-template-columns: 1fr; }
+  .app { padding: 1rem 0.75rem; }
+  .app-header h1 { font-size: 1.2rem; }
+  .todo-item { font-size: 0.9rem; padding: 0.4rem 0.3rem; }
+  .todo-item input[type="checkbox"] { width: 18px; height: 18px; }
+  .delete-btn { opacity: 1; font-size: 1.1rem; padding: 0 4px; }
+  .add-todo-form input { font-size: 0.9rem; padding: 0.45rem 0.6rem; }
+  .form-actions button { padding: 0.45rem; font-size: 0.85rem; }
+  .week-navigation button { width: 40px; height: 40px; }
+}

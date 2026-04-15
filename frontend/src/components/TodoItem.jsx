@@ -1,4 +1,7 @@
+const PRIORITY_LABELS = { high: '높음', medium: '중간', low: '낮음' };
+
 export default function TodoItem({ todo, onToggle, onDelete }) {
+  const priority = todo.priority || 'medium';
   return (
     <li className={`todo-item${todo.completed ? ' completed' : ''}`}>
       <input
@@ -9,6 +12,7 @@ export default function TodoItem({ todo, onToggle, onDelete }) {
       />
       <span className="todo-title">{todo.title}</span>
       {todo.time && <span className="todo-time">{todo.time}</span>}
+      <span className={`priority-badge ${priority}`}>{PRIORITY_LABELS[priority]}</span>
       <button
         className="delete-btn"
         onClick={() => onDelete(todo.id)}

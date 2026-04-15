@@ -16,8 +16,8 @@ async function request(method, path, body) {
 // week: "YYYY-MM-DD" (Monday of the week)
 export const getTodos = (week) => request('GET', `/api/todos?week=${week}`);
 
-export const createTodo = (title, time, todoDate) =>
-  request('POST', '/api/todos', { title, time, todoDate });
+export const createTodo = (title, time, todoDate, priority) =>
+  request('POST', '/api/todos', { title, time, todoDate, priority });
 
 export const updateTodo = (id, patch) =>
   request('PUT', `/api/todos/${id}`, patch);

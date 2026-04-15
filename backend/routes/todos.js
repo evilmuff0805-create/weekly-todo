@@ -13,6 +13,7 @@ function toTodo(row) {
       ? row.todo_date.toISOString().split('T')[0]
       : String(row.todo_date).split('T')[0],
     completed: row.completed,
+    priority: row.priority || 'medium',
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -39,18 +40,20 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/todos  body: { title, time?, todoDate }
+// POST /api/todos  body: { title, time?, todoDate, priority? }
 router.post('/', async (req, res) => {
-  const { title, time, todoDate } = req.body;
+  const { title, time, todoDate, priority } = req.body;
   if (!title || !todoDate) {
     return res.status(400).json({ error: 'title and todoDate are required' });
   }
+  const validPriorities = ['high', 'medium', 'low'];
+  const safePriority = validPriorities.includes(priority) ? priority : 'medium';
   try {
     const result = await pool.query(
-      `INSERT INTO todos (title, time, todo_date)
-       VALUES ($1, $2, $3::date)
+      `INSERT INTO todos (title, time, todo_date, priority)
+       VALUES ($1, $2, $3::date, $4)
        RETURNING *`,
-      [title.trim(), time || null, todoDate]
+      [title.trim(), time || null, todoDate, safePriority]
     );
     res.status(201).json(toTodo(result.rows[0]));
   } catch (err) {
@@ -59,12 +62,12 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/todos/:id  body: { title?, time?, todoDate?, completed? }
+// PUT /api/todos/:id  body: { title?, time?, todoDate?, completed?, priority? }
 router.put('/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
 
-  const { title, time, todoDate, completed } = req.body;
+  const { title, time, todoDate, completed, priority } = req.body;
 
   // Build dynamic SET clause
   const fields = [];
@@ -75,6 +78,11 @@ router.put('/:id', async (req, res) => {
   if (time !== undefined)  { fields.push(`time = $${idx++}`);  values.push(time || null); }
   if (todoDate !== undefined) { fields.push(`todo_date = $${idx++}::date`); values.push(todoDate); }
   if (completed !== undefined) { fields.push(`completed = $${idx++}`); values.push(Boolean(completed)); }
+  if (priority !== undefined) {
+    const validPriorities = ['high', 'medium', 'low'];
+    fields.push(`priority = $${idx++}`);
+    values.push(validPriorities.includes(priority) ? priority : 'medium');
+  }
 
   if (fields.length === 0) return res.status(400).json({ error: 'No fields to update' });
 

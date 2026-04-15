@@ -1,0 +1,13 @@
+Template initialized
+
+[2026-04-14 00:00:00] Project initialized
+- User request: 다크모드 추가, 모바일 반응형 최적화, Todo 우선순위(높음/중간/낮음) 추가, 기존 기능 유지
+- Features defined: 25
+- Directory structure: 기존 구조 유지 (backend/, frontend/src/components|hooks|styles/)
+- Tech stack: Node.js + Express + PostgreSQL (backend), React 18 + Vite + 순수 CSS (frontend)
+- Ready for development
+
+Next: Start implementing high-priority features
+  1. 다크모드: index.css에 [data-theme="dark"] 추가, App.jsx에 토글 상태 및 localStorage 저장
+  2. 우선순위: schema.sql에 priority 컬럼 추가, API/UI 연동
+  3. 모바일 반응형: 480px 이하 1열 breakpoint 추가, 터치 UI 최적화
