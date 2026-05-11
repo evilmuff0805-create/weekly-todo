@@ -25,7 +25,7 @@ export default function App() {
     localStorage.setItem('theme', darkMode ? 'dark' : 'light');
   }, [darkMode]);
 
-  const { todos, todayTodos, loading, error, addTodo, toggleTodo, removeTodo } =
+  const { todos, todayTodos, loading, error, addTodo, toggleTodo, removeTodo, editTodo } =
     useTodos(weekMonday);
 
   const handleNotification = useCallback(() => {
@@ -75,6 +75,7 @@ export default function App() {
           onAdd={addTodo}
           onToggle={toggleTodo}
           onDelete={removeTodo}
+          onEdit={editTodo}
         />
       )}
 

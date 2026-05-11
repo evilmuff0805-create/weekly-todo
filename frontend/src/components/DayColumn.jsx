@@ -2,7 +2,7 @@ import DayHeader from './DayHeader';
 import TodoItem from './TodoItem';
 import AddTodoForm from './AddTodoForm';
 
-export default function DayColumn({ date, todos, onAdd, onToggle, onDelete }) {
+export default function DayColumn({ date, todos, onAdd, onToggle, onDelete, onEdit }) {
   const today = new Date();
   const isToday =
     date.getFullYear() === today.getFullYear() &&
@@ -19,6 +19,7 @@ export default function DayColumn({ date, todos, onAdd, onToggle, onDelete }) {
             todo={todo}
             onToggle={onToggle}
             onDelete={onDelete}
+            onEdit={onEdit}
           />
         ))}
       </ul>
