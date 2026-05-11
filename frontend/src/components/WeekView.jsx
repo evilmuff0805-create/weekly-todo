@@ -1,6 +1,6 @@
 import DayColumn from './DayColumn';
 
-export default function WeekView({ weekMonday, todos, onAdd, onToggle, onDelete }) {
+export default function WeekView({ weekMonday, todos, onAdd, onToggle, onDelete, onEdit }) {
   const days = Array.from({ length: 7 }, (_, i) => {
     const d = new Date(weekMonday);
     d.setDate(d.getDate() + i);
@@ -20,6 +20,7 @@ export default function WeekView({ weekMonday, todos, onAdd, onToggle, onDelete 
             onAdd={(title, time, priority) => onAdd(title, time, dateStr, priority)}
             onToggle={onToggle}
             onDelete={onDelete}
+            onEdit={onEdit}
           />
         );
       })}

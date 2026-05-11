@@ -47,9 +47,14 @@ export function useTodos(weekMonday) {
     setTodos((prev) => prev.filter((t) => t.id !== id));
   }, []);
 
+  const editTodo = useCallback(async (id, patch) => {
+    const updated = await updateTodo(id, patch);
+    setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
+  }, []);
+
   // Return today's todos for the notification modal
   const todayStr = toIsoDate(new Date());
   const todayTodos = todos.filter((t) => t.todoDate === todayStr);
 
-  return { todos, todayTodos, loading, error, addTodo, toggleTodo, removeTodo };
+  return { todos, todayTodos, loading, error, addTodo, toggleTodo, removeTodo, editTodo };
 }
