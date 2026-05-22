@@ -68,25 +68,29 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }) {
         onChange={() => onToggle(todo.id, !todo.completed)}
         aria-label={`${todo.completed ? '완료 취소' : '완료'}: ${todo.title}`}
       />
-      <span className={`todo-title${priority === 'high' ? ' highlight-high' : ''}`}>
-        {todo.title}
-      </span>
-      {todo.time && <span className="todo-time">{todo.time}</span>}
-      <span className={`priority-badge ${priority}`}>{PRIORITY_LABELS[priority]}</span>
-      <button
-        className="edit-btn"
-        onClick={() => setEditing(true)}
-        aria-label="수정"
-      >
-        ✎
-      </button>
-      <button
-        className="delete-btn"
-        onClick={() => onDelete(todo.id)}
-        aria-label="삭제"
-      >
-        ×
-      </button>
+      <div className="todo-body">
+        <span className={`todo-title${priority === 'high' ? ' highlight-high' : ''}`}>
+          {todo.title}
+        </span>
+        <div className="todo-meta">
+          {todo.time && <span className="todo-time">{todo.time}</span>}
+          <span className={`priority-badge ${priority}`}>{PRIORITY_LABELS[priority]}</span>
+          <button
+            className="edit-btn"
+            onClick={() => setEditing(true)}
+            aria-label="수정"
+          >
+            ✎
+          </button>
+          <button
+            className="delete-btn"
+            onClick={() => onDelete(todo.id)}
+            aria-label="삭제"
+          >
+            ×
+          </button>
+        </div>
+      </div>
     </li>
   );
 }
