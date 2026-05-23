@@ -3,6 +3,9 @@ const { pool } = require('../database');
 
 const router = express.Router();
 
+const VALID_PRIORITIES = ['high', 'medium', 'low'];
+const VALID_TEAMS = ['yerim', 'geunho', 'junsu'];
+
 // Helper: convert DB row to camelCase response shape
 function toTodo(row) {
   return {
@@ -14,6 +17,7 @@ function toTodo(row) {
       : String(row.todo_date).split('T')[0],
     completed: row.completed,
     priority: row.priority || 'medium',
+    team: row.team || 'yerim',
     createdAt: row.created_at,
     updatedAt: row.updated_at,
   };
@@ -40,20 +44,20 @@ router.get('/', async (req, res) => {
   }
 });
 
-// POST /api/todos  body: { title, time?, todoDate, priority? }
+// POST /api/todos  body: { title, time?, todoDate, priority?, team? }
 router.post('/', async (req, res) => {
-  const { title, time, todoDate, priority } = req.body;
+  const { title, time, todoDate, priority, team } = req.body;
   if (!title || !todoDate) {
     return res.status(400).json({ error: 'title and todoDate are required' });
   }
-  const validPriorities = ['high', 'medium', 'low'];
-  const safePriority = validPriorities.includes(priority) ? priority : 'medium';
+  const safePriority = VALID_PRIORITIES.includes(priority) ? priority : 'medium';
+  const safeTeam = VALID_TEAMS.includes(team) ? team : 'yerim';
   try {
     const result = await pool.query(
-      `INSERT INTO todos (title, time, todo_date, priority)
-       VALUES ($1, $2, $3::date, $4)
+      `INSERT INTO todos (title, time, todo_date, priority, team)
+       VALUES ($1, $2, $3::date, $4, $5)
        RETURNING *`,
-      [title.trim(), time || null, todoDate, safePriority]
+      [title.trim(), time || null, todoDate, safePriority, safeTeam]
     );
     res.status(201).json(toTodo(result.rows[0]));
   } catch (err) {
@@ -62,26 +66,29 @@ router.post('/', async (req, res) => {
   }
 });
 
-// PUT /api/todos/:id  body: { title?, time?, todoDate?, completed?, priority? }
+// PUT /api/todos/:id  body: { title?, time?, todoDate?, completed?, priority?, team? }
 router.put('/:id', async (req, res) => {
   const id = parseInt(req.params.id, 10);
   if (isNaN(id)) return res.status(400).json({ error: 'Invalid id' });
 
-  const { title, time, todoDate, completed, priority } = req.body;
+  const { title, time, todoDate, completed, priority, team } = req.body;
 
   // Build dynamic SET clause
   const fields = [];
   const values = [];
   let idx = 1;
 
-  if (title !== undefined) { fields.push(`title = $${idx++}`); values.push(title.trim()); }
-  if (time !== undefined)  { fields.push(`time = $${idx++}`);  values.push(time || null); }
-  if (todoDate !== undefined) { fields.push(`todo_date = $${idx++}::date`); values.push(todoDate); }
-  if (completed !== undefined) { fields.push(`completed = $${idx++}`); values.push(Boolean(completed)); }
-  if (priority !== undefined) {
-    const validPriorities = ['high', 'medium', 'low'];
+  if (title !== undefined)     { fields.push(`title = $${idx++}`);           values.push(title.trim()); }
+  if (time !== undefined)      { fields.push(`time = $${idx++}`);            values.push(time || null); }
+  if (todoDate !== undefined)  { fields.push(`todo_date = $${idx++}::date`); values.push(todoDate); }
+  if (completed !== undefined) { fields.push(`completed = $${idx++}`);       values.push(Boolean(completed)); }
+  if (priority !== undefined)  {
     fields.push(`priority = $${idx++}`);
-    values.push(validPriorities.includes(priority) ? priority : 'medium');
+    values.push(VALID_PRIORITIES.includes(priority) ? priority : 'medium');
+  }
+  if (team !== undefined) {
+    fields.push(`team = $${idx++}`);
+    values.push(VALID_TEAMS.includes(team) ? team : 'yerim');
   }
 
   if (fields.length === 0) return res.status(400).json({ error: 'No fields to update' });
