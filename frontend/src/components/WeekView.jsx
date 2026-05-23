@@ -17,7 +17,7 @@ export default function WeekView({ weekMonday, todos, onAdd, onToggle, onDelete,
             key={dateStr}
             date={date}
             todos={dayTodos}
-            onAdd={(title, time, priority) => onAdd(title, time, dateStr, priority)}
+            onAdd={(title, time, priority, team) => onAdd(title, time, dateStr, priority, team)}
             onToggle={onToggle}
             onDelete={onDelete}
             onEdit={onEdit}

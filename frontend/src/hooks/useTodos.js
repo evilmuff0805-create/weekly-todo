@@ -32,8 +32,8 @@ export function useTodos(weekMonday) {
     return () => clearInterval(interval);
   }, [fetchTodos]);
 
-  const addTodo = useCallback(async (title, time, todoDate, priority) => {
-    const todo = await createTodo(title, time, todoDate, priority);
+  const addTodo = useCallback(async (title, time, todoDate, priority, team) => {
+    const todo = await createTodo(title, time, todoDate, priority, team);
     setTodos((prev) => [...prev, todo]);
   }, []);
 

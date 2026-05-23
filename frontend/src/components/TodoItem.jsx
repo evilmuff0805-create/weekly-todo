@@ -1,12 +1,14 @@
 import { useState } from 'react';
 
 const PRIORITY_LABELS = { high: '높음', medium: '중간', low: '낮음' };
+const TEAM_LABELS = { yerim: '예림', geunho: '근호', junsu: '준수' };
 
 export default function TodoItem({ todo, onToggle, onDelete, onEdit }) {
   const [editing, setEditing] = useState(false);
   const [editTitle, setEditTitle] = useState(todo.title);
   const [editTime, setEditTime] = useState(todo.time || '');
   const [editPriority, setEditPriority] = useState(todo.priority || 'medium');
+  const [editTeam, setEditTeam] = useState(todo.team || 'yerim');
 
   const priority = todo.priority || 'medium';
 
@@ -14,7 +16,7 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }) {
     e.preventDefault();
     const trimmed = editTitle.trim();
     if (!trimmed) return;
-    onEdit(todo.id, { title: trimmed, time: editTime || null, priority: editPriority });
+    onEdit(todo.id, { title: trimmed, time: editTime || null, priority: editPriority, team: editTeam });
     setEditing(false);
   }
 
@@ -22,6 +24,7 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }) {
     setEditTitle(todo.title);
     setEditTime(todo.time || '');
     setEditPriority(todo.priority || 'medium');
+    setEditTeam(todo.team || 'yerim');
     setEditing(false);
   }
 
@@ -51,6 +54,16 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }) {
               <option key={val} value={val}>{label}</option>
             ))}
           </select>
+          <select
+            className="priority-select"
+            value={editTeam}
+            onChange={(e) => setEditTeam(e.target.value)}
+            aria-label="담당자"
+          >
+            {Object.entries(TEAM_LABELS).map(([val, label]) => (
+              <option key={val} value={val}>{label}</option>
+            ))}
+          </select>
           <div className="form-actions">
             <button type="submit">저장</button>
             <button type="button" onClick={handleEditCancel}>취소</button>
@@ -69,7 +82,7 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }) {
         aria-label={`${todo.completed ? '완료 취소' : '완료'}: ${todo.title}`}
       />
       <div className="todo-body">
-        <span className={`todo-title${priority === 'high' ? ' highlight-high' : ''}`}>
+        <span className={`todo-title${priority === 'high' ? ` highlight-high highlight-${todo.team || 'yerim'}` : ''}`}>
           {todo.title}
         </span>
         <div className="todo-meta">
