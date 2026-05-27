@@ -122,6 +122,15 @@ body {
   background: var(--today-bg);
   border-color: var(--today-border);
 }
+.day-column.drop-over {
+  background: var(--primary-light);
+  border-color: var(--primary);
+  border-style: dashed;
+}
+.day-column.today.drop-over {
+  background: var(--primary-light);
+  border-color: var(--primary);
+}
 
 /* Day Header */
 .day-header {
@@ -182,7 +191,28 @@ body {
 }
 .todo-item:hover { background: var(--primary-light); }
 .todo-item:hover .edit-btn,
-.todo-item:hover .delete-btn { opacity: 1; }
+.todo-item:hover .delete-btn,
+.todo-item:hover .drag-handle { opacity: 1; }
+
+.todo-item.dragging { opacity: 0.35; background: var(--primary-light); }
+
+/* Drag handle */
+.drag-handle {
+  background: none;
+  border: none;
+  color: var(--text-muted);
+  font-size: 0.9rem;
+  cursor: grab;
+  opacity: 0;
+  padding: 0 2px;
+  line-height: 1;
+  flex-shrink: 0;
+  align-self: flex-start;
+  margin-top: 2px;
+  touch-action: none;
+}
+.drag-handle:active { cursor: grabbing; }
+@media (hover: none) { .drag-handle { opacity: 0.45; } }
 
 .todo-item input[type="checkbox"] {
   width: 15px;
@@ -447,6 +477,22 @@ body {
 }
 .modal-confirm-btn:hover { background: #4338ca; }
 
+/* DragOverlay floating card */
+.drag-overlay-card {
+  background: var(--card-bg);
+  border: 1px solid var(--primary);
+  border-radius: 6px;
+  padding: 0.4rem 0.6rem;
+  font-size: 0.82rem;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  max-width: 180px;
+  pointer-events: none;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  color: var(--text);
+}
+
 /* Mobile optimizations — placed last to win specificity battles */
 @media (max-width: 480px) {
   .week-view { grid-template-columns: 1fr; }
@@ -454,6 +500,7 @@ body {
   .app-header h1 { font-size: 1.2rem; }
   .todo-item { font-size: 0.9rem; padding: 0.4rem 0.3rem; }
   .todo-item input[type="checkbox"] { width: 18px; height: 18px; }
+  .drag-handle { opacity: 0.6; font-size: 1.1rem; padding: 0 4px; }
   .edit-btn { opacity: 1; font-size: 1rem; padding: 0 4px; }
   .delete-btn { opacity: 1; font-size: 1.1rem; padding: 0 4px; }
   .add-todo-form input { font-size: 0.9rem; padding: 0.45rem 0.6rem; }

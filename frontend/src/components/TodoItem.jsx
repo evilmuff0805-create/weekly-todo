@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { useDraggable } from '@dnd-kit/core';
+import { CSS } from '@dnd-kit/utilities';
 
 const PRIORITY_LABELS = { high: '높음', medium: '중간', low: '낮음' };
 const TEAM_LABELS = { yerim: '예림', geunho: '근호', junsu: '준수' };
@@ -10,7 +12,12 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }) {
   const [editPriority, setEditPriority] = useState(todo.priority || 'medium');
   const [editTeam, setEditTeam] = useState(todo.team || 'yerim');
 
+  const { attributes, listeners, setNodeRef, transform, isDragging } = useDraggable({
+    id: todo.id,
+  });
+
   const priority = todo.priority || 'medium';
+  const style = transform ? { transform: CSS.Translate.toString(transform) } : undefined;
 
   function handleEditSubmit(e) {
     e.preventDefault();
@@ -74,7 +81,20 @@ export default function TodoItem({ todo, onToggle, onDelete, onEdit }) {
   }
 
   return (
-    <li className={`todo-item${todo.completed ? ' completed' : ''}`}>
+    <li
+      ref={setNodeRef}
+      style={style}
+      className={`todo-item${todo.completed ? ' completed' : ''}${isDragging ? ' dragging' : ''}`}
+    >
+      <button
+        className="drag-handle"
+        {...listeners}
+        {...attributes}
+        aria-label="드래그하여 날짜 이동"
+        tabIndex={-1}
+      >
+        ⠿
+      </button>
       <input
         type="checkbox"
         checked={todo.completed}
